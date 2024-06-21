@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,7 +37,6 @@ import com.example.vchatmessenger.ui.theme.getSecondAppColor
 @Composable
 fun LoginScreen(
     vm: LogInViewModel,
-    sharedVM: LogInSharedViewModel,
     navController: NavHostController
 ) {
     val state = vm.state
@@ -91,7 +89,6 @@ fun LoginScreen(
                 contentAlignment = Alignment.BottomEnd
             ) {
                 VchatNextFloatingActionButton {
-                    sharedVM.changeData(nickname = state.nickname)
                     vm.buttonNextPressed(navController)
                 }
             }
@@ -106,7 +103,7 @@ fun LoginScreen(
                 state.showErrorDialog -> {
                     VchatAlertDialog(
                         onDismissRequest = { vm.updateData(showErrorDialog = false) },
-                        onConfirmation = {vm.updateData(showErrorDialog = false)},
+                        onConfirmation = { vm.updateData(showErrorDialog = false) },
                         dialogTitle = "Произошла ошибка",
                         dialogText = state.errorNickname
                     )
@@ -122,8 +119,10 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPrev() {
     LoginScreen(
-        LogInViewModel(LogInUsecase(null)),
-        LogInSharedViewModel(),
+        LogInViewModel(
+            LogInSharedViewModel(),
+            LogInUsecase(null)
+        ),
         rememberNavController()
     )
 }

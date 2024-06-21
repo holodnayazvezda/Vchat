@@ -13,7 +13,7 @@ class ErrorUsecase {
                 ) {
                     "Не удалось соедениться с сервером Вчат! Проверьте соединение с интернетом."
                 } else if (errorMessageLowercase.contains("401")) {
-                    "Неверный пароль!"
+                    "Неверный авторизационные данные!"
                 } else {
                     errorMessageLowercase.substringBefore('.')
                 }

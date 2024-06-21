@@ -1,7 +1,11 @@
 package com.example.vchatmessenger.domain.usecase.checkPassword
 
+import com.example.vchatmessenger.data.network.VchatRepository
 
-class CreatePasswordUsecase {
+
+class CreatePasswordUsecase(
+    private val repository: VchatRepository?
+) {
     private fun checkCorrectness(password: String): String {
         return if (password.isEmpty()) {
             "Пароль не указан"
@@ -15,9 +19,9 @@ class CreatePasswordUsecase {
             "Пароль должен содержать хотя бы одну строчную букву"
         } else if (!password.matches(".*[A-Z].*".toRegex())) {
             "Пароль должен содержать хотя бы одну заглавную букву"
-        } else if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*".toRegex())) {
+        } else if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*".toRegex())) {
             "Пароль должен содержать хотя бы 1 специальный символ"
-        } else if (!password.matches("[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]*".toRegex())) {
+        } else if (!password.matches("[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]*".toRegex())) {
             "Пароль может сожержать только строчные и заглавные букв A-Z, цифры и специальные символы"
         } else {
             ""
@@ -37,6 +41,20 @@ class CreatePasswordUsecase {
         return res.ifEmpty {
             return checkConfirmation(password1, password2)
         }
+    }
+
+    suspend fun changePasswordUsingSecretKey(
+        nickname: String,
+        secretKeyWordsNumbers: List<Int>,
+        secretKey: List<String>,
+        newPassword: String
+    ) {
+        repository?.changePasswordUsingSecretKey(
+            nickname,
+            secretKeyWordsNumbers,
+            secretKey,
+            newPassword
+        )
     }
 }
 

@@ -1,13 +1,13 @@
 package com.example.vchatmessenger.domain.navigation
 
+import ImagePickerComposable
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.vchatmessenger.domain.usecase.checkPassword.CreatePasswordUsecase
-import com.example.vchatmessenger.domain.usecase.enterSecretKey.EnterSecretKeyUsecase
-import com.example.vchatmessenger.ui.components.ImagePicker
+import com.example.vchatmessenger.ui.screens.chooseAvatar.ChooseAvatarScreen
+import com.example.vchatmessenger.ui.screens.chooseAvatar.ChooseAvatarViewModel
 import com.example.vchatmessenger.ui.screens.createPassword.CreatePasswordScreen
 import com.example.vchatmessenger.ui.screens.createPassword.CreatePasswordViewModel
 import com.example.vchatmessenger.ui.screens.enterPassword.EnterPasswordScreen
@@ -23,35 +23,44 @@ import com.example.vchatmessenger.ui.screens.viewSecretKey.ViewSecretKeyViewMode
 import com.example.vchatmessenger.ui.screens.welcome.WelcomeScreen
 import com.example.vchatmessenger.ui.sharedViewModel.LogInSharedViewModel
 import com.example.vchatmessenger.ui.sharedViewModel.SignUpSharedViewModel
+import com.example.vchatmessenger.ui.sharedViewModel.VchatSharedViewModel
 
 @Composable
 fun NavGraph(
     signUpSharedViewModel: SignUpSharedViewModel,
-    logInSharedViewModel: LogInSharedViewModel
+    logInSharedViewModel: LogInSharedViewModel,
+    vchatSharedViewModel: VchatSharedViewModel
 ) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "welcome") {
         composable("welcome") {
-            WelcomeScreen(navController)
+            WelcomeScreen(
+                navController
+            )
         }
         composable("signup") {
             SignUpScreen(
                 viewModel(factory = SignUpViewModel.Factory),
-                signUpSharedViewModel,
                 navController
             )
         }
         composable("login") {
             LoginScreen(
                 viewModel(factory = LogInViewModel.Factory),
-                logInSharedViewModel,
                 navController
             )
         }
         composable("create_password") {
             CreatePasswordScreen(
-                CreatePasswordViewModel(CreatePasswordUsecase()),
+                viewModel(factory = CreatePasswordViewModel.Factory),
+                vchatSharedViewModel,
+                navController
+            )
+        }
+        composable("choose_avatar") {
+            ChooseAvatarScreen(
+                viewModel(factory = ChooseAvatarViewModel.Factory),
                 signUpSharedViewModel,
                 navController
             )
@@ -59,16 +68,12 @@ fun NavGraph(
         composable("enter_password") {
             EnterPasswordScreen(
                 viewModel(factory = EnterPasswordViewModel.Factory),
-                logInSharedViewModel,
                 navController
             )
         }
         composable("enter_secret_key") {
             EnterSecretKeyScreen(
-                EnterSecretKeyViewModel(
-                    logInSharedViewModel,
-                    EnterSecretKeyUsecase()
-                ),
+                viewModel(factory = EnterSecretKeyViewModel.Factory),
                 navController
             )
         }
@@ -80,7 +85,7 @@ fun NavGraph(
             )
         }
         composable("image_picker") {
-            ImagePicker()
+            ImagePickerComposable()
         }
     }
 }

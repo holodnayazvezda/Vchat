@@ -9,12 +9,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
+import com.example.vchatmessenger.data.states.SignUpState
 import com.example.vchatmessenger.domain.usecase.ErrorUsecase
 import com.example.vchatmessenger.domain.usecase.signup.SignUpUsecase
 import com.example.vchatmessenger.ui.VchatApplication
+import com.example.vchatmessenger.ui.sharedViewModel.SignUpSharedViewModel
+import com.example.vchatmessenger.ui.sharedViewModel.VchatSharedViewModel
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
+    private val sharedVM: SignUpSharedViewModel,
+    private val vchatSharedVM: VchatSharedViewModel,
     private val signUpUsecase: SignUpUsecase
 ) : ViewModel() {
     var state by mutableStateOf(SignUpState())
@@ -30,15 +35,19 @@ class SignUpViewModel(
             nickname = nickname,
             showErrorDialog = showErrorDialog
         )
+        sharedVM.changeName(name = name)
+        sharedVM.changeNickname(nickname = nickname)
     }
 
     private fun checkName() {
+        updateData(name = state.name.trim())
         state = state.copy(
             errorName = signUpUsecase.checkName(state.name)
         )
     }
 
     private suspend fun checkNickname() {
+        updateData(nickname = state.nickname.trim())
         if (state.errorName.isEmpty()) {
             state = state.copy(
                 isLoading = true
@@ -67,6 +76,7 @@ class SignUpViewModel(
                 checkNickname()
             }
             if (state.errorName.isEmpty() && state.errorNickname.isEmpty()) {
+                vchatSharedVM.displayCreatePasswordScreenAsCreateNewPasswordScreen = false
                 navController.navigate("create_password")
             } else {
                 state = state.copy(showErrorDialog = true)
@@ -74,22 +84,28 @@ class SignUpViewModel(
         }
     }
 
+    private fun restorePreviouslyEnteredData() {
+        updateData(
+            name = sharedVM.data.name,
+            nickname = sharedVM.data.nickname
+        )
+    }
+
+    init {
+        restorePreviouslyEnteredData()
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VchatApplication)
                 val vchatRepository = application.container.vchatRepository
-                SignUpViewModel(SignUpUsecase(repository = vchatRepository))
+                SignUpViewModel(
+                    application.container.signUpSharedViewModel,
+                    application.container.vchatSharedViewModel,
+                    SignUpUsecase(repository = vchatRepository)
+                )
             }
         }
     }
 }
-
-data class SignUpState(
-    val name: String = "",
-    val errorName: String = "Имя не указано",
-    val nickname: String = "",
-    val errorNickname: String = "Никнейм не указан",
-    val isLoading: Boolean = false,
-    val showErrorDialog: Boolean = false
-)

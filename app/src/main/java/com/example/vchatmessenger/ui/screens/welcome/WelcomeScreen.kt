@@ -31,7 +31,9 @@ import com.example.vchatmessenger.ui.theme.getMainAppColor
 import com.example.vchatmessenger.ui.theme.getSecondAppColor
 
 @Composable
-fun WelcomeScreen(navController: NavHostController) {
+fun WelcomeScreen(
+    navController: NavHostController
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +63,7 @@ fun WelcomeScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(260.dp))
             Button(
                 onClick = {
-                          navController.navigate("signup")
+                    navController.navigate("signup")
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -90,5 +92,7 @@ fun WelcomeScreen(navController: NavHostController) {
 @Preview
 @Composable
 private fun WelcomeScreenPrev() {
-    WelcomeScreen(rememberNavController())
+    WelcomeScreen(
+        rememberNavController()
+    )
 }

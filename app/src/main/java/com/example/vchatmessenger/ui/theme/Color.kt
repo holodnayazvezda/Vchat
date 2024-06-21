@@ -30,3 +30,5 @@ fun getMainAppColor() = if (isSystemInDarkTheme()) currentAppColor.mainAppColor 
 
 @Composable
 fun getSecondAppColor() = if (isSystemInDarkTheme()) currentAppColor.secondAppColor else currentAppColor.mainAppColor
+
+fun getUserAvatarDefaultBackgroundColor() = currentAppColor.mainAppColor

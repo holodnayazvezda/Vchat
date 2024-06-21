@@ -37,7 +37,7 @@
     <string name="no_messages">No messages</string>
     <string name="no_dialog_selected">Choose the chat</string>
     <string name="message">Message</string>
-    <string name="choose_your_photo">Choose the photo of your profile</string>
+    <string name="choose_your_photo">Avatar selection</string>
     <string name="skip">Skip</string>
     <string name="select_image_from">Select image from</string>
     <string name="camera">Camera</string>

@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.play.services.cast.framework)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,16 +71,14 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.androidx.material.icons.extended)
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     // Coil
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.coil.compose)
     // Image Picker
-    implementation("run.nabla:gallery-picker:1.4.5")
-    implementation("io.github.onseok:peekaboo-image-picker:0.5.2")
-    implementation("io.github.onseok:peekaboo-ui:0.5.2")
-
+    implementation(libs.emoji.java)
+    implementation(libs.android.image.cropper)
 }

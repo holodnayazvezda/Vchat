@@ -31,6 +31,7 @@ import com.example.vchatmessenger.ui.components.VchatLoadingScreen
 import com.example.vchatmessenger.ui.components.VchatNextFloatingActionButton
 import com.example.vchatmessenger.ui.components.VchatOutlinedTextField
 import com.example.vchatmessenger.ui.sharedViewModel.SignUpSharedViewModel
+import com.example.vchatmessenger.ui.sharedViewModel.VchatSharedViewModel
 import com.example.vchatmessenger.ui.theme.getMainAppColor
 import com.example.vchatmessenger.ui.theme.getSecondAppColor
 
@@ -38,7 +39,6 @@ import com.example.vchatmessenger.ui.theme.getSecondAppColor
 @Composable
 fun SignUpScreen(
     vm: SignUpViewModel,
-    sharedVM: SignUpSharedViewModel,
     navController: NavHostController
 ) {
     val state = vm.state
@@ -75,13 +75,17 @@ fun SignUpScreen(
                         Spacer(modifier = Modifier.height(70.dp))
                         VchatOutlinedTextField(
                             value = state.name,
-                            onValueChange = {name -> vm.updateData(name = name)},
+                            onValueChange = { name ->
+                                vm.updateData(name = name)
+                            },
                             placeholderText = "Имя"
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                         VchatOutlinedTextField(
                             value = state.nickname,
-                            onValueChange = {nickname -> vm.updateData(nickname = nickname)},
+                            onValueChange = { nickname ->
+                                vm.updateData(nickname = nickname)
+                            },
                             placeholderText = "Никнейм"
                         )
                         Spacer(modifier = Modifier.height(50.dp))
@@ -95,10 +99,6 @@ fun SignUpScreen(
                 contentAlignment = Alignment.BottomEnd
             ) {
                 VchatNextFloatingActionButton {
-                    sharedVM.changeData(
-                        name = state.name,
-                        nickname = state.nickname
-                    )
                     vm.buttonNextPressed(navController)
                 }
             }
@@ -131,8 +131,11 @@ fun SignUpScreen(
 @Composable
 private fun SignUpScreenPrev() {
     SignUpScreen(
-        SignUpViewModel(SignUpUsecase(null)),
-        SignUpSharedViewModel(),
+        SignUpViewModel(
+            SignUpSharedViewModel(),
+            VchatSharedViewModel(),
+            SignUpUsecase(null),
+        ),
         rememberNavController()
     )
 }

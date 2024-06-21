@@ -25,11 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.vchatmessenger.R
-import com.example.vchatmessenger.data.models.SecretKeyModel
 import com.example.vchatmessenger.domain.usecase.viewSecretKey.ViewSecretKeyUsecase
-import com.example.vchatmessenger.ui.components.VchatAlertDialog
 import com.example.vchatmessenger.ui.components.VchatBackIconButton
-import com.example.vchatmessenger.ui.components.VchatLoadingScreen
 import com.example.vchatmessenger.ui.components.VchatNextFloatingActionButton
 import com.example.vchatmessenger.ui.components.VchatSecretKeyBox
 import com.example.vchatmessenger.ui.sharedViewModel.SignUpSharedViewModel
@@ -42,94 +39,62 @@ fun ViewSecretKeyScreen(
     sharedVM: SignUpSharedViewModel,
     navController: NavHostController
 ) {
-    val state = vm.state
-    if (!state.isLoading) {
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(getMainAppColor())
+            .padding(start = 20.dp, end = 20.dp)
+    ) {
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(getMainAppColor())
-                .padding(start = 20.dp, end = 20.dp)
+                .weight(0.85f),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(0.85f),
-                contentAlignment = Alignment.Center
+            Column(
+                Modifier.fillMaxSize()
             ) {
+                Spacer(modifier = Modifier.height(30.dp))
+                VchatBackIconButton("choose_avatar", navController)
+                Spacer(modifier = Modifier.height(50.dp))
                 Column(
-                    Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier = Modifier.height(30.dp))
-                    VchatBackIconButton("create_password", navController)
-                    Spacer(modifier = Modifier.height(50.dp))
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Text(
+                        text = stringResource(id = R.string.secret_key_text),
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = getSecondAppColor(),
+                        fontFamily = FontFamily.SansSerif,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 40.sp
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.secret_key_text),
-                            fontSize = 40.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = getSecondAppColor(),
-                            fontFamily = FontFamily.SansSerif,
-                            textAlign = TextAlign.Center,
-                            lineHeight = 40.sp
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                        val items = listOf(
-                            SecretKeyModel(1, "mother"),
-                            SecretKeyModel(2, "father"),
-                            SecretKeyModel(3, "granny"),
-                            SecretKeyModel(4, "ded"),
-                            SecretKeyModel(5, "polina"),
-                        )
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(20.dp)
-                        ) {
-                            items(items = items) { item ->
-                                VchatSecretKeyBox(
-                                    number = item.number,
-                                    secretWord = item.secretWord
-                                )
-                            }
+                        items(items = sharedVM.data.secretKey) { secretKeyWord ->
+                            VchatSecretKeyBox(
+                                number = sharedVM.data.secretKey.indexOf(secretKeyWord) + 1,
+                                secretWord = secretKeyWord
+                            )
                         }
                     }
                 }
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(0.15f),
-                contentAlignment = Alignment.BottomEnd
-            ) {
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(0.15f),
+            contentAlignment = Alignment.BottomEnd
+        ) {
 
-                VchatNextFloatingActionButton {
-                    sharedVM.changeData(
-                        secretKey = listOf(
-                            "mother",
-                            "father",
-                            "granny",
-                            "ded",
-                            "polina"
-                        )
-                    )
-                    vm.buttonNextPressed(sharedVM, navController)
-                }
-            }
-
-            when {
-                state.showErrorDialog -> {
-                    VchatAlertDialog(
-                        onDismissRequest = { vm.updateData(showErrorDialog = false) },
-                        onConfirmation = { vm.updateData(showErrorDialog = false) },
-                        dialogTitle = "Произошла ошибка",
-                        dialogText = state.error
-                    )
-                }
+            VchatNextFloatingActionButton {
+                vm.buttonNextPressed(navController)
             }
         }
-    } else {
-        VchatLoadingScreen()
     }
 }
 
@@ -137,7 +102,7 @@ fun ViewSecretKeyScreen(
 @Composable
 private fun ViewSecretKeyScreenPrev() {
     ViewSecretKeyScreen(
-        ViewSecretKeyViewModel(ViewSecretKeyUsecase(null)),
+        ViewSecretKeyViewModel(ViewSecretKeyUsecase()),
         SignUpSharedViewModel(),
         rememberNavController()
     )

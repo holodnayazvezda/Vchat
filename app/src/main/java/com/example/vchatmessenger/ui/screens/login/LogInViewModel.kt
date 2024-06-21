@@ -9,12 +9,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
+import com.example.vchatmessenger.data.states.LogInState
 import com.example.vchatmessenger.domain.usecase.ErrorUsecase
 import com.example.vchatmessenger.domain.usecase.login.LogInUsecase
 import com.example.vchatmessenger.ui.VchatApplication
+import com.example.vchatmessenger.ui.sharedViewModel.LogInSharedViewModel
 import kotlinx.coroutines.launch
 
 class LogInViewModel(
+    private val sharedVM: LogInSharedViewModel,
     private val logInUsecase: LogInUsecase
 ): ViewModel() {
     var state by mutableStateOf(LogInState())
@@ -28,6 +31,7 @@ class LogInViewModel(
             nickname = nickname,
             showErrorDialog = showErrorDialog
         )
+        sharedVM.changeNickname(nickname = state.nickname)
     }
 
     private suspend fun checkNickname() {
@@ -61,20 +65,26 @@ class LogInViewModel(
         }
     }
 
+    private fun restorePreviouslyEnteredData() {
+        updateData(
+            nickname = sharedVM.data.nickname
+        )
+    }
+
+    init {
+        restorePreviouslyEnteredData()
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VchatApplication)
                 val vchatRepository = application.container.vchatRepository
-                LogInViewModel(LogInUsecase(repository = vchatRepository))
+                LogInViewModel(
+                    application.container.logInSharedViewModel,
+                    LogInUsecase(repository = vchatRepository)
+                )
             }
         }
     }
 }
-
-data class LogInState(
-    val nickname: String = "",
-    val errorNickname: String = "Никнейм не указан",
-    val isLoading: Boolean = false,
-    val showErrorDialog: Boolean = false
-)

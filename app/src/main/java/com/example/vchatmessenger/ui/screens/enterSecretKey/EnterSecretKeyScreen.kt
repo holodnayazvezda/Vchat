@@ -13,8 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,9 +29,11 @@ import com.example.vchatmessenger.domain.usecase.enterSecretKey.EnterSecretKeyUs
 import com.example.vchatmessenger.ui.components.VchatAlertDialog
 import com.example.vchatmessenger.ui.components.VchatBackIconButton
 import com.example.vchatmessenger.ui.components.VchatInfoText
+import com.example.vchatmessenger.ui.components.VchatLoadingScreen
 import com.example.vchatmessenger.ui.components.VchatNextFloatingActionButton
 import com.example.vchatmessenger.ui.components.VchatSecretKeyInputBox
 import com.example.vchatmessenger.ui.sharedViewModel.LogInSharedViewModel
+import com.example.vchatmessenger.ui.sharedViewModel.VchatSharedViewModel
 import com.example.vchatmessenger.ui.theme.getMainAppColor
 import com.example.vchatmessenger.ui.theme.getSecondAppColor
 
@@ -43,89 +43,87 @@ fun EnterSecretKeyScreen(
     navController: NavHostController
 ) {
     val state = vm.state
-    val openErrorDialog = remember { mutableStateOf(false) }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(getMainAppColor())
-            .padding(start = 20.dp, end = 20.dp)
-    ) {
-        Box(
+    if (!state.isLoading) {
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(0.85f),
-            contentAlignment = Alignment.Center
+                .background(getMainAppColor())
+                .padding(start = 20.dp, end = 20.dp)
         ) {
-            Column(
-                Modifier.fillMaxSize()
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.85f),
+                contentAlignment = Alignment.Center
             ) {
-                Spacer(modifier = Modifier.height(30.dp))
-                VchatBackIconButton("enter_password", navController)
-                Spacer(modifier = Modifier.height(50.dp))
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    Modifier.fillMaxSize()
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.password_recovery),
-                        fontSize = 40.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = getSecondAppColor(),
-                        fontFamily = FontFamily.SansSerif,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 40.sp
-                    )
-                    Spacer(modifier = Modifier.height(70.dp))
-                    val numbers = listOf(
-                        0, 1, 2
-                    )
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    Spacer(modifier = Modifier.height(30.dp))
+                    VchatBackIconButton("enter_password", navController)
+                    Spacer(modifier = Modifier.height(50.dp))
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(items = numbers) { number ->
-                            VchatSecretKeyInputBox(
-                                number = number + 1,
-                                secretKey = state.secretKey[number],
-                                onSecretKeyChange = { secretKey -> vm.updateSecretKey(number, secretKey) }
-                            )
+                        Text(
+                            text = stringResource(id = R.string.password_recovery),
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = getSecondAppColor(),
+                            fontFamily = FontFamily.SansSerif,
+                            textAlign = TextAlign.Center,
+                            lineHeight = 40.sp
+                        )
+                        Spacer(modifier = Modifier.height(70.dp))
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(20.dp)
+                        ) {
+                            items(items = state.secretKeyWordsNumbers) { secretKeyWordNumber ->
+                                val secretKeyWordIndex =
+                                    state.secretKeyWordsNumbers.indexOf(secretKeyWordNumber)
+                                VchatSecretKeyInputBox(
+                                    number = secretKeyWordNumber + 1,
+                                    secretKey = state.secretKey[secretKeyWordIndex],
+                                    onSecretKeyChange = { secretKeyWord ->
+                                        vm.updateSecretKey(secretKeyWordIndex, secretKeyWord)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(0.15f),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            VchatNextFloatingActionButton {
-                if (state.errorSecretKey.isNotEmpty()) {
-                    openErrorDialog.value = true
-                } else {
-                    navController.navigate("enter_password")
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.15f),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                VchatNextFloatingActionButton {
+                    vm.buttonNextPressed(navController)
+                }
+            }
+            VchatInfoText(
+                "Вспомнили пароль? ",
+                "Войти",
+                "enter_password",
+                navController
+            )
+
+            when {
+                state.showErrorDialog -> {
+                    VchatAlertDialog(
+                        onDismissRequest = { vm.setShowErrorDialog(false) },
+                        onConfirmation = { vm.setShowErrorDialog(false) },
+                        dialogTitle = "Произошла ошибка",
+                        dialogText = state.errorSecretKey
+                    )
                 }
             }
         }
-        VchatInfoText(
-            "Вспомнили пароль? ",
-            "Войти",
-            "enter_password",
-            navController
-        )
-
-        when {
-            openErrorDialog.value -> {
-                VchatAlertDialog(
-                    onDismissRequest = { openErrorDialog.value = false },
-                    onConfirmation = {
-                        openErrorDialog.value = false
-                    },
-                    dialogTitle = "Произошла ошибка",
-                    dialogText = state.errorSecretKey
-                )
-            }
-        }
+    } else {
+        VchatLoadingScreen()
     }
 }
 
@@ -135,7 +133,8 @@ private fun EnterSecretKeyScreenPrev() {
     EnterSecretKeyScreen(
         EnterSecretKeyViewModel(
             LogInSharedViewModel(),
-            EnterSecretKeyUsecase()
+            VchatSharedViewModel(),
+            EnterSecretKeyUsecase(null)
         ),
         rememberNavController()
     )

@@ -38,7 +38,6 @@ import com.example.vchatmessenger.ui.theme.getSecondAppColor
 @Composable
 fun EnterPasswordScreen(
     vm: EnterPasswordViewModel,
-    sharedVM: LogInSharedViewModel,
     navController: NavHostController
 ) {
     val state = vm.state
@@ -93,7 +92,7 @@ fun EnterPasswordScreen(
                 contentAlignment = Alignment.BottomEnd
             ) {
                 VchatNextFloatingActionButton {
-                    vm.buttonNextPressed(navController, sharedVM)
+                    vm.buttonNextPressed(navController)
                 }
             }
             VchatInfoText(
@@ -124,9 +123,9 @@ fun EnterPasswordScreen(
 private fun EnterPasswordScreenPrev() {
     EnterPasswordScreen(
         EnterPasswordViewModel(
+            LogInSharedViewModel(),
             EnterPasswordUsecase(null)
         ),
-        LogInSharedViewModel(),
         rememberNavController()
     )
 }
