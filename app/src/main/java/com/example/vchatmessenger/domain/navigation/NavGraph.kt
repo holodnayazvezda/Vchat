@@ -1,6 +1,5 @@
 package com.example.vchatmessenger.domain.navigation
 
-import ImagePickerComposable
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -83,9 +82,6 @@ fun NavGraph(
                 signUpSharedViewModel,
                 navController
             )
-        }
-        composable("image_picker") {
-            ImagePickerComposable()
         }
     }
 }

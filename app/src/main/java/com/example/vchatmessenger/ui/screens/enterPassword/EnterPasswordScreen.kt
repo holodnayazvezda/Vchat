@@ -18,20 +18,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.vchatmessenger.R
-import com.example.vchatmessenger.domain.usecase.enterPassword.EnterPasswordUsecase
 import com.example.vchatmessenger.ui.components.VchatAlertDialog
 import com.example.vchatmessenger.ui.components.VchatBackIconButton
 import com.example.vchatmessenger.ui.components.VchatInfoText
 import com.example.vchatmessenger.ui.components.VchatLoadingScreen
 import com.example.vchatmessenger.ui.components.VchatNextFloatingActionButton
 import com.example.vchatmessenger.ui.components.VchatOutlinedTextFieldWithHideButton
-import com.example.vchatmessenger.ui.sharedViewModel.LogInSharedViewModel
 import com.example.vchatmessenger.ui.theme.getMainAppColor
 import com.example.vchatmessenger.ui.theme.getSecondAppColor
 
@@ -116,16 +112,4 @@ fun EnterPasswordScreen(
     } else {
         VchatLoadingScreen()
     }
-}
-
-@Preview
-@Composable
-private fun EnterPasswordScreenPrev() {
-    EnterPasswordScreen(
-        EnterPasswordViewModel(
-            LogInSharedViewModel(),
-            EnterPasswordUsecase(null)
-        ),
-        rememberNavController()
-    )
 }

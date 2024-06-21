@@ -19,13 +19,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.vchatmessenger.R
-import com.example.vchatmessenger.domain.usecase.viewSecretKey.ViewSecretKeyUsecase
 import com.example.vchatmessenger.ui.components.VchatBackIconButton
 import com.example.vchatmessenger.ui.components.VchatNextFloatingActionButton
 import com.example.vchatmessenger.ui.components.VchatSecretKeyBox
@@ -96,14 +93,4 @@ fun ViewSecretKeyScreen(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun ViewSecretKeyScreenPrev() {
-    ViewSecretKeyScreen(
-        ViewSecretKeyViewModel(ViewSecretKeyUsecase()),
-        SignUpSharedViewModel(),
-        rememberNavController()
-    )
 }
