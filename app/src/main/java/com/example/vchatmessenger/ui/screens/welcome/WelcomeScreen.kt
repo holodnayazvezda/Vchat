@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.vchatmessenger.R
+import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.ui.components.VchatInfoText
 import com.example.vchatmessenger.ui.theme.getMainAppColor
 import com.example.vchatmessenger.ui.theme.getSecondAppColor
@@ -63,7 +64,7 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.height(260.dp))
             Button(
                 onClick = {
-                    navController.navigate("signup")
+                    navController.navigate(ScreensRouts.SignUp.route)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -82,7 +83,7 @@ fun WelcomeScreen(
             VchatInfoText(
                 "Уже зарегистрировались? ",
                 "Войти",
-                "login",
+                ScreensRouts.LogIn.route,
                 navController
             )
         }

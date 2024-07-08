@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.vchatmessenger.R
+import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.ui.components.VchatAlertDialog
 import com.example.vchatmessenger.ui.components.VchatBackIconButton
 import com.example.vchatmessenger.ui.components.VchatInfoText
@@ -91,7 +92,7 @@ fun LoginScreen(
             VchatInfoText(
                 "Еще нет аккаунта? ",
                 "Зарегистрироваться",
-                "signup",
+                ScreensRouts.SignUp.route,
                 navController
             )
 

@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import com.example.vchatmessenger.data.states.LogInState
+import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.domain.usecase.ErrorUsecase
 import com.example.vchatmessenger.domain.usecase.login.LogInUsecase
 import com.example.vchatmessenger.ui.VchatApplication
@@ -58,7 +59,7 @@ class LogInViewModel(
         viewModelScope.launch {
             checkNickname()
             if (state.errorNickname.isEmpty()) {
-                navController.navigate("enter_password")
+                navController.navigate(ScreensRouts.EnterPassword.route)
             } else {
                 state = state.copy(showErrorDialog = true)
             }

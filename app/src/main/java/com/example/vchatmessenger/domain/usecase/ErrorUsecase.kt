@@ -21,5 +21,13 @@ class ErrorUsecase {
                 "Неизвестная ошибка"
             }
         }
+
+        fun <T> getErrorText(obj: T): String {
+            return if (obj.toString().isEmpty()) {
+                "Неизвестная ошибка"
+            } else {
+                ""
+            }
+        }
     }
 }

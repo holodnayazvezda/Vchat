@@ -14,5 +14,6 @@ data class SignUpSharedViewModelState(
     val userAvatar: UserAvatar = UserAvatar(
         null,
         currentAppColor.mainAppColor
-    )
+    ),
+    val userAvatarFileNameOnServer: String = ""
 )

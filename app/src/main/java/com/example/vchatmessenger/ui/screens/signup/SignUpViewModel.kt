@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import com.example.vchatmessenger.data.states.SignUpState
+import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.domain.usecase.ErrorUsecase
 import com.example.vchatmessenger.domain.usecase.signup.SignUpUsecase
 import com.example.vchatmessenger.ui.VchatApplication
@@ -77,7 +78,7 @@ class SignUpViewModel(
             }
             if (state.errorName.isEmpty() && state.errorNickname.isEmpty()) {
                 vchatSharedVM.displayCreatePasswordScreenAsCreateNewPasswordScreen = false
-                navController.navigate("create_password")
+                navController.navigate(ScreensRouts.CreatePassword.route)
             } else {
                 state = state.copy(showErrorDialog = true)
             }

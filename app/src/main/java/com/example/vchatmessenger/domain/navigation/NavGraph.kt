@@ -15,6 +15,7 @@ import com.example.vchatmessenger.ui.screens.enterSecretKey.EnterSecretKeyScreen
 import com.example.vchatmessenger.ui.screens.enterSecretKey.EnterSecretKeyViewModel
 import com.example.vchatmessenger.ui.screens.login.LogInViewModel
 import com.example.vchatmessenger.ui.screens.login.LoginScreen
+import com.example.vchatmessenger.ui.screens.mainScreen.MainScreen
 import com.example.vchatmessenger.ui.screens.signup.SignUpScreen
 import com.example.vchatmessenger.ui.screens.signup.SignUpViewModel
 import com.example.vchatmessenger.ui.screens.viewSecretKey.ViewSecretKeyScreen
@@ -28,60 +29,66 @@ import com.example.vchatmessenger.ui.sharedViewModel.VchatSharedViewModel
 fun NavGraph(
     signUpSharedViewModel: SignUpSharedViewModel,
     logInSharedViewModel: LogInSharedViewModel,
-    vchatSharedViewModel: VchatSharedViewModel
+    vchatSharedViewModel: VchatSharedViewModel,
+
+    startScreen: String
 ) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "welcome") {
-        composable("welcome") {
+    NavHost(navController = navController, startDestination = startScreen) {
+        composable(ScreensRouts.Welcome.route) {
             WelcomeScreen(
                 navController
             )
         }
-        composable("signup") {
+        composable(ScreensRouts.SignUp.route) {
             SignUpScreen(
                 viewModel(factory = SignUpViewModel.Factory),
                 navController
             )
         }
-        composable("login") {
+        composable(ScreensRouts.LogIn.route) {
             LoginScreen(
                 viewModel(factory = LogInViewModel.Factory),
                 navController
             )
         }
-        composable("create_password") {
+        composable(ScreensRouts.CreatePassword.route) {
             CreatePasswordScreen(
                 viewModel(factory = CreatePasswordViewModel.Factory),
                 vchatSharedViewModel,
                 navController
             )
         }
-        composable("choose_avatar") {
+        composable(ScreensRouts.ChooseAvatar.route) {
             ChooseAvatarScreen(
                 viewModel(factory = ChooseAvatarViewModel.Factory),
                 signUpSharedViewModel,
                 navController
             )
         }
-        composable("enter_password") {
+        composable(ScreensRouts.EnterPassword.route) {
             EnterPasswordScreen(
                 viewModel(factory = EnterPasswordViewModel.Factory),
                 navController
             )
         }
-        composable("enter_secret_key") {
+        composable(ScreensRouts.EnterSecretKey.route) {
             EnterSecretKeyScreen(
                 viewModel(factory = EnterSecretKeyViewModel.Factory),
                 navController
             )
         }
-        composable("view_secret_key") {
+        composable(ScreensRouts.ViewSecretKey.route) {
             ViewSecretKeyScreen(
                 viewModel(factory = ViewSecretKeyViewModel.Factory),
                 signUpSharedViewModel,
                 navController
             )
+        }
+
+        composable(ScreensRouts.MainScreen.route) {
+            MainScreen()
         }
     }
 }

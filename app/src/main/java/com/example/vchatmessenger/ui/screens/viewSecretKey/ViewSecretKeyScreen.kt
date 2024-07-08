@@ -1,5 +1,6 @@
 package com.example.vchatmessenger.ui.screens.viewSecretKey
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -91,6 +92,10 @@ fun ViewSecretKeyScreen(
             VchatNextFloatingActionButton {
                 vm.buttonNextPressed(navController)
             }
+        }
+
+        BackHandler(true) {
+            vm.buttonNextPressed(navController)
         }
     }
 }

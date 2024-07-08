@@ -3,6 +3,7 @@ package com.example.vchatmessenger.data.network
 import android.util.Base64
 import com.example.vchatmessenger.data.models.retrofit.SignUpModel
 import com.example.vchatmessenger.data.models.retrofit.UserModel
+import okhttp3.MultipartBody
 
 interface VchatRepository {
     suspend fun checkNicknameForUser(nickname: String): Int
@@ -20,6 +21,7 @@ interface VchatRepository {
         secretKey: List<String>,
         password: String
     )
+    suspend fun uploadAvatar(avatar: MultipartBody.Part): String
 }
 
 class NetworkVchatRepository(
@@ -67,5 +69,9 @@ class NetworkVchatRepository(
             secretKey,
             password
         )
+    }
+
+    override suspend fun uploadAvatar(avatar: MultipartBody.Part): String {
+        return vchatApiService.uploadAvatar(avatar)
     }
 }

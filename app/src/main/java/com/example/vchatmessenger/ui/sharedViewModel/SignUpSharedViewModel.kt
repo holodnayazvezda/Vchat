@@ -43,5 +43,9 @@ class SignUpSharedViewModel : ViewModel() {
     fun changeUserAvatar(userAvatar: UserAvatar) {
         _data = _data.copy(userAvatar = userAvatar)
     }
+
+    fun changeUserAvatarFileNameOnServer(userAvatarFileNameOnServer: String) {
+        _data = _data.copy(userAvatarFileNameOnServer = userAvatarFileNameOnServer)
+    }
 }
 

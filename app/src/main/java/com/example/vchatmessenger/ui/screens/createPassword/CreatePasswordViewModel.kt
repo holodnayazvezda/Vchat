@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import com.example.vchatmessenger.data.states.CreatePasswordState
+import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.domain.usecase.ErrorUsecase
 import com.example.vchatmessenger.domain.usecase.checkPassword.CreatePasswordUsecase
 import com.example.vchatmessenger.ui.VchatApplication
@@ -90,13 +91,17 @@ class CreatePasswordViewModel(
                 viewModelScope.launch {
                     changePasswordUsingSecretKey()
                     if (state.errorPassword.isEmpty()) {
-                        navController.navigate("welcome")
+                        vchatSharedVM.writeAuthDataToSharedPreferences(
+                            nickname = logInSharedVM.data.nickname,
+                            password = logInSharedVM.data.password
+                        )
+                        navController.navigate(ScreensRouts.MainScreen.route)
                     } else {
                         state = state.copy(showErrorDialog = true)
                     }
                 }
             } else {
-                navController.navigate("choose_avatar")
+                navController.navigate(ScreensRouts.ChooseAvatar.route)
             }
         }
     }

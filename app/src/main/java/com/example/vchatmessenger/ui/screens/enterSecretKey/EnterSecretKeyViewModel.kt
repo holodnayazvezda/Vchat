@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import com.example.vchatmessenger.data.states.EnterSecretKeyState
+import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.domain.usecase.ErrorUsecase
 import com.example.vchatmessenger.domain.usecase.enterSecretKey.EnterSecretKeyUsecase
 import com.example.vchatmessenger.ui.VchatApplication
@@ -32,12 +33,13 @@ class EnterSecretKeyViewModel(
     }
 
     fun updateSecretKey(secretKeyWordNumber: Int, secretKeyWord: String) {
+        val trimmedSecretKeyWord = secretKeyWord.trim()
         val secretKeys = state.secretKey.toMutableList()
-        secretKeys[secretKeyWordNumber] = secretKeyWord
+        secretKeys[secretKeyWordNumber] = trimmedSecretKeyWord
         state = state.copy(
             secretKey = secretKeys
         )
-        sharedVM.updateSecretKey(secretKeyWordNumber, secretKeyWord)
+        sharedVM.updateSecretKey(secretKeyWordNumber, trimmedSecretKeyWord)
     }
 
     private fun setSecretKeyWordsNumbers() {
@@ -74,7 +76,7 @@ class EnterSecretKeyViewModel(
             checkSecretKey()
             if (state.errorSecretKey.isEmpty()) {
                 vchatSharedVM.displayCreatePasswordScreenAsCreateNewPasswordScreen = true
-                navController.navigate("create_password")
+                navController.navigate(ScreensRouts.CreatePassword.route)
             } else {
                 setShowErrorDialog(true)
             }

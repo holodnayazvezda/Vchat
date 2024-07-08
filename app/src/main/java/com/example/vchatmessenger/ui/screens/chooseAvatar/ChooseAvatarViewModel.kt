@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import com.example.vchatmessenger.data.states.ChooseAvatarState
+import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.domain.usecase.ErrorUsecase
 import com.example.vchatmessenger.domain.usecase.chooseAvatar.ChooseAvatarUsecase
 import com.example.vchatmessenger.ui.VchatApplication
@@ -45,21 +46,42 @@ class ChooseAvatarViewModel(
         }
     }
 
+    private suspend fun uploadAvatar() {
+        state = state.copy(
+            isLoading = true
+        )
+        state = try {
+            val userAvatarFileNameOnServer = sharedVM.data.userAvatar.avatar?.let {
+                chooseAvatarUsecase.uploadAvatar(it)
+            }
+            sharedVM.changeUserAvatarFileNameOnServer(
+                userAvatarFileNameOnServer ?: ""
+            )
+            state.copy(
+                isLoading = false,
+                showErrorDialog = userAvatarFileNameOnServer.isNullOrEmpty(),
+                error = ErrorUsecase.getErrorText(userAvatarFileNameOnServer)
+            )
+        } catch (e: Exception) {
+            state.copy(
+                isLoading = false,
+                showErrorDialog = true,
+                error = ErrorUsecase.getErrorText(e.message)
+            )
+        }
+    }
+
     private suspend fun createUser() {
         state = state.copy(
             isLoading = true
         )
         state = try {
             val registeredUserSecretKey = chooseAvatarUsecase.createUser(sharedVM.data)
-            var errorText = ""
-            if (registeredUserSecretKey.isEmpty()) {
-                errorText = "Неизвестная ошибка"
-            }
             sharedVM.changeSecretKey(secretKey = registeredUserSecretKey)
             state.copy(
                 isLoading = false,
                 showErrorDialog = registeredUserSecretKey.isEmpty(),
-                error = errorText,
+                error = ErrorUsecase.getErrorText(registeredUserSecretKey),
             )
         } catch (e: Exception) {
             state.copy(
@@ -72,9 +94,12 @@ class ChooseAvatarViewModel(
 
     fun buttonNextPressed(navController: NavHostController) {
         viewModelScope.launch {
+            if (sharedVM.data.userAvatar.avatarType == 2) {
+                uploadAvatar()
+            }
             createUser()
             if (state.error.isEmpty()) {
-                navController.navigate("view_secret_key")
+                navController.navigate(ScreensRouts.ViewSecretKey.route)
             }
         }
     }

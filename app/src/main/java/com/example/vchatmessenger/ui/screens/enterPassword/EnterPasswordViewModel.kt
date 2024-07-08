@@ -10,14 +10,17 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import com.example.vchatmessenger.data.states.EnterPasswordState
+import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.domain.usecase.ErrorUsecase
 import com.example.vchatmessenger.domain.usecase.enterPassword.EnterPasswordUsecase
 import com.example.vchatmessenger.ui.VchatApplication
 import com.example.vchatmessenger.ui.sharedViewModel.LogInSharedViewModel
+import com.example.vchatmessenger.ui.sharedViewModel.VchatSharedViewModel
 import kotlinx.coroutines.launch
 
 class EnterPasswordViewModel(
     private val sharedVM: LogInSharedViewModel,
+    private val vchatSharedVM: VchatSharedViewModel,
     private val enterPasswordUsecase: EnterPasswordUsecase
 ) : ViewModel() {
     var state by mutableStateOf(EnterPasswordState())
@@ -58,7 +61,11 @@ class EnterPasswordViewModel(
         viewModelScope.launch {
             checkPassword(sharedVM.data.nickname)
             if (state.errorPassword.isEmpty()) {
-                navController.navigate("welcome")
+                vchatSharedVM.writeAuthDataToSharedPreferences(
+                    nickname = sharedVM.data.nickname,
+                    password = sharedVM.data.password
+                )
+                navController.navigate(ScreensRouts.MainScreen.route)
             } else {
                 state = state.copy(showErrorDialog = true)
             }
@@ -81,8 +88,9 @@ class EnterPasswordViewModel(
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VchatApplication)
                 val vchatRepository = application.container.vchatRepository
                 EnterPasswordViewModel(
-                    application.container.logInSharedViewModel,
-                    EnterPasswordUsecase(repository = vchatRepository)
+                    sharedVM = application.container.logInSharedViewModel,
+                    vchatSharedVM = application.container.vchatSharedViewModel,
+                    enterPasswordUsecase = EnterPasswordUsecase(repository = vchatRepository)
                 )
             }
         }
