@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
-import com.example.vchatmessenger.data.Storage
+import com.example.vchatmessenger.data.storage.AuthStorage
 import com.example.vchatmessenger.domain.navigation.NavGraph
 import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.ui.theme.VchatMessengerTheme
@@ -15,13 +15,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val application = context.applicationContext as VchatApplication
-            val storage = Storage(context)
+            val authStorage = AuthStorage(context)
             VchatMessengerTheme {
                 NavGraph(
                     signUpSharedViewModel = application.container.signUpSharedViewModel,
                     logInSharedViewModel = application.container.logInSharedViewModel,
                     vchatSharedViewModel = application.container.vchatSharedViewModel,
-                    startScreen = if (storage.isStartup != null) {
+                    startScreen = if (authStorage.isStartup != null) {
                         ScreensRouts.MainScreen.route
                     } else {
                         ScreensRouts.Welcome.route

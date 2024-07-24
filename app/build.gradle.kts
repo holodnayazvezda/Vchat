@@ -82,4 +82,6 @@ dependencies {
     // Image Picker
     implementation(libs.emoji.java)
     implementation(libs.android.image.cropper)
+    // google-gson
+    implementation(libs.gson)
 }

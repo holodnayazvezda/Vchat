@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import com.example.vchatmessenger.data.states.ChooseAvatarState
 import com.example.vchatmessenger.domain.navigation.ScreensRouts
 import com.example.vchatmessenger.domain.usecase.ErrorUsecase
+import com.example.vchatmessenger.domain.usecase.avatar.AvatarUsecase
 import com.example.vchatmessenger.domain.usecase.chooseAvatar.ChooseAvatarUsecase
 import com.example.vchatmessenger.ui.VchatApplication
 import com.example.vchatmessenger.ui.sharedViewModel.SignUpSharedViewModel
@@ -31,7 +32,7 @@ class ChooseAvatarViewModel(
     }
 
     fun generateAvatar(name: String) {
-        val generatedAvatar = chooseAvatarUsecase.generateAvatar(
+        val generatedAvatar = AvatarUsecase.generateAvatar(
             name,
             sharedVM.data.userAvatar.currentBackgroundColor
         )

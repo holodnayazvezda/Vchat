@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import com.example.vchatmessenger.ui.screens.allChats.AllChatsScreen
 import com.example.vchatmessenger.ui.screens.privateChats.PrivateChatsScreen
 import com.example.vchatmessenger.ui.screens.profile.ProfileScreen
+import com.example.vchatmessenger.ui.screens.profile.ProfileViewModel
 
 data class MainScreenBottomNavigationItem(
     val label : String,
@@ -23,7 +24,10 @@ data class MainScreenBottomNavigationItem(
     val composable: @Composable () -> Unit
 ) {
     companion object {
-        fun mainScreenBottomNavigationItems(navController: NavHostController): List<MainScreenBottomNavigationItem> {
+        fun mainScreenBottomNavigationItems(
+            navController: NavHostController,
+            profileVM: ProfileViewModel
+        ): List<MainScreenBottomNavigationItem> {
             return listOf(
                 MainScreenBottomNavigationItem(
                     label = "Профиль",
@@ -31,7 +35,7 @@ data class MainScreenBottomNavigationItem(
                     icon = Icons.Outlined.AccountCircle,
                     route = ScreensRouts.Profile.route,
                     page = 0,
-                    composable = { ProfileScreen(navController = navController) }
+                    composable = { ProfileScreen(navController = navController, vm = profileVM) }
                 ),
                 MainScreenBottomNavigationItem(
                     label = "Все чаты",

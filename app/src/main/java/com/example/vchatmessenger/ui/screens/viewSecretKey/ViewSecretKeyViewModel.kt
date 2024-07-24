@@ -20,7 +20,7 @@ class ViewSecretKeyViewModel(
     fun buttonNextPressed(navController: NavHostController) {
         vchatSharedVM.writeAuthDataToSharedPreferences(
             sharedVM.data.nickname,
-            sharedVM.data.newPassword
+            sharedVM.data.password
         )
         navController.navigate(ScreensRouts.MainScreen.route)
     }

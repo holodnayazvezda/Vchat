@@ -25,7 +25,7 @@ class AvatarGenerator(private var backgroundColor: Color, letter: String) {
         // Рисование фона
         canvas.drawPaint(paint)
         // создание цвета текста (цветовые компоненты противоположны цветовым компонентам цвета фона)
-        val textColor = ColorsWorker().getTextColor(backgroundColor)
+        val textColor = ColorsWorker.getAvatarTextColor(backgroundColor)
         // Настройка кисти для рисования текста
         paint.apply {
             color = textColor.toArgb()

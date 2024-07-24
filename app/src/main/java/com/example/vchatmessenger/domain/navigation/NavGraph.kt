@@ -16,6 +16,8 @@ import com.example.vchatmessenger.ui.screens.enterSecretKey.EnterSecretKeyViewMo
 import com.example.vchatmessenger.ui.screens.login.LogInViewModel
 import com.example.vchatmessenger.ui.screens.login.LoginScreen
 import com.example.vchatmessenger.ui.screens.mainScreen.MainScreen
+import com.example.vchatmessenger.ui.screens.mainScreen.MainScreenViewModel
+import com.example.vchatmessenger.ui.screens.profile.ProfileViewModel
 import com.example.vchatmessenger.ui.screens.signup.SignUpScreen
 import com.example.vchatmessenger.ui.screens.signup.SignUpViewModel
 import com.example.vchatmessenger.ui.screens.viewSecretKey.ViewSecretKeyScreen
@@ -88,7 +90,11 @@ fun NavGraph(
         }
 
         composable(ScreensRouts.MainScreen.route) {
-            MainScreen()
+            MainScreen(
+                viewModel(factory = MainScreenViewModel.Factory),
+                viewModel(factory = ProfileViewModel.Factory),
+                navController
+            )
         }
     }
 }

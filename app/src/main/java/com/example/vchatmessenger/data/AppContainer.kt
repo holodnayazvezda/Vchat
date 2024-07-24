@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.vchatmessenger.data.network.NetworkVchatRepository
 import com.example.vchatmessenger.data.network.VchatApiService
 import com.example.vchatmessenger.data.network.VchatRepository
+import com.example.vchatmessenger.data.storage.AuthStorage
 import com.example.vchatmessenger.ui.sharedViewModel.LogInSharedViewModel
 import com.example.vchatmessenger.ui.sharedViewModel.SignUpSharedViewModel
 import com.example.vchatmessenger.ui.sharedViewModel.VchatSharedViewModel
@@ -49,6 +50,8 @@ class DefaultAppContainer(
         LogInSharedViewModel()
     }
     override val vchatSharedViewModel: VchatSharedViewModel by lazy {
-        VchatSharedViewModel(Storage(context))
+        VchatSharedViewModel(
+            AuthStorage(context)
+        )
     }
 }

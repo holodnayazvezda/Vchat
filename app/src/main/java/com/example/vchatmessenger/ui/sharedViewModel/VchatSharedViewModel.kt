@@ -4,10 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.vchatmessenger.data.Storage
+import androidx.navigation.NavHostController
+import com.example.vchatmessenger.data.storage.AuthStorage
+import com.example.vchatmessenger.domain.navigation.ScreensRouts
 
 class VchatSharedViewModel(
-    private val storage: Storage
+    private val authStorage: AuthStorage
 ): ViewModel() {
     var displayCreatePasswordScreenAsCreateNewPasswordScreen by mutableStateOf(false)
 
@@ -15,8 +17,13 @@ class VchatSharedViewModel(
         nickname: String,
         password: String
     ) {
-        storage.isStartup = "true"
-        storage.nickname = nickname
-        storage.password = password
+        authStorage.isStartup = "true"
+        authStorage.nickname = nickname
+        authStorage.password = password
+    }
+
+    fun logOut(navController: NavHostController) {
+        authStorage.clearAuthData()
+        navController.navigate(ScreensRouts.Welcome.route)
     }
 }
