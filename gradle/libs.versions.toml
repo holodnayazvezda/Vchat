@@ -1,6 +1,6 @@
 [versions]
 accompanistSystemuicontroller = "0.27.0"
-agp = "8.3.2"
+agp = "8.7.1"
 androidImageCropper = "4.5.0"
 coilCompose = "2.4.0"
 converterGson = "2.9.0"
